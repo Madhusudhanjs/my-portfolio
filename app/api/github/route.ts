@@ -11,7 +11,6 @@ export async function GET() {
           Accept: "application/vnd.github+json",
           "X-GitHub-Api-Version": "2022-11-28",
         },
-        // You can change this to use revalidation if you want caching:
         cache: "no-store",
       }
     );
@@ -27,7 +26,6 @@ export async function GET() {
     const repos = (await res.json()) as any[];
 
     const simplified = repos
-      // ignore forked repos
       .filter((repo) => !repo.fork)
       .map((repo) => ({
         id: repo.id,
