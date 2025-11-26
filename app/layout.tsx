@@ -17,27 +17,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className={inter.className + " bg-slate-950 text-slate-100"}>
         <div className="min-h-screen flex flex-col">
           {/* Navbar */}
-          <header className="border-b border-slate-800 bg-slate-950/80 backdrop-blur">
-            <nav className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-              <Link href="/" className="font-semibold tracking-wide">
-                MJ · Portfolio
-              </Link>
-              <div className="flex gap-4 text-sm">
-                <Link href="/" className="hover:text-slate-300">
-                  Home
-                </Link>
-                <Link href="/projects" className="hover:text-slate-300">
-                  Projects
-                </Link>
-                <Link href="/learning" className="hover:text-slate-300">
-                  Learning
-                </Link>
-                <Link href="/resume" className="hover:text-slate-300">
-                  Resume
-                </Link>
-              </div>
-            </nav>
-          </header>
+         
 
           {/* Page content */}
           <main className="flex-1">
