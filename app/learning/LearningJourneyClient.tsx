@@ -400,6 +400,7 @@ export default function LearningJourneyClient() {
   };
 
   /* ----- AI mentor (OpenAI via /api/learning/analyze) ----- */
+    /* ----- AI mentor (OpenAI via /api/ai/learning-analyze) ----- */
   const runAiAnalysis = async () => {
     if (logs.length === 0 && tasks.length === 0) {
       alert("Log at least one session or task first.");
@@ -411,11 +412,32 @@ export default function LearningJourneyClient() {
       setAiError(null);
       setAiResult(null);
 
-      const res = await fetch("/api/learning/analyze", {
+      const res = await fetch("/api/ai/learning-analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ logs, tasks }),
       });
+
+      const contentType = res.headers.get("content-type") || "";
+
+      if (!contentType.includes("application/json")) {
+        const text = await res.text();
+        console.error(
+          "Non-JSON response from /api/ai/learning-analyze:",
+          text
+        );
+
+        if (res.status === 404) {
+          setAiError(
+            "AI route not found (404). Check that app/api/ai/learning-analyze/route.ts exists and the dev server was restarted."
+          );
+        } else {
+          setAiError(
+            "Server returned an unexpected response. See console for details."
+          );
+        }
+        return;
+      }
 
       const data = await res.json();
 
