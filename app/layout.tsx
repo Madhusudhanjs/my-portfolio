@@ -24,12 +24,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             {children}
           </main>
 
-          {/* Footer */}
-          <footer className="border-t border-slate-800 text-xs text-slate-500">
-            <div className="max-w-5xl mx-auto px-4 py-3">
-              © {new Date().getFullYear()} Madhusudhan J S · Built with Next.js
-            </div>
-          </footer>
+          
         </div>
       </body>
     </html>
