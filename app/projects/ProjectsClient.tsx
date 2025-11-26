@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 
 type Repo = {
@@ -29,46 +28,20 @@ const PROJECT_CONFIG: Record<string, ProjectExtras> = {
 };
 
 export default function ProjectsClient({ repos }: Props) {
-  // filter is always a string
-  const [filter, setFilter] = useState<string>("All");
-
-  // build languages as pure string[], no nulls
-  const languages: string[] = [
-    "All",
-    ...Array.from(
-      new Set(
-        repos.map((r) => r.language ?? "Unknown") // convert null to "Unknown"
-      )
-    ),
-  ];
-
-  const filteredRepos =
-    filter === "All"
-      ? repos
-      : repos.filter((r) => (r.language ?? "Unknown") === filter);
-
   return (
     <div className="space-y-8">
-      {/* FILTER BAR */}
-      <div className="flex flex-wrap gap-3 justify-center">
-        {languages.map((lang) => (
-          <button
-            key={lang}
-            onClick={() => setFilter(lang)}
-            className={`px-4 py-1.5 rounded-full text-xs border transition ${
-              filter === lang
-                ? "bg-white text-black border-white"
-                : "border-slate-700 text-slate-300 hover:border-white"
-            }`}
-          >
-            {lang}
-          </button>
-        ))}
+      {/* HEADER (no filter for now) */}
+      <div className="text-center space-y-2">
+        <h2 className="text-lg font-semibold text-white">Projects</h2>
+        <p className="text-xs text-slate-400">
+          All repositories fetched from my GitHub profile. Filtering will be
+          added later.
+        </p>
       </div>
 
       {/* PROJECT GRID */}
       <div className="grid md:grid-cols-2 gap-6">
-        {filteredRepos.map((repo, index) => {
+        {repos.map((repo, index) => {
           const extra = PROJECT_CONFIG[repo.name] || {};
           const hasVideo = !!extra.videoUrl;
           const hasDemo = !!(repo.homepage && repo.homepage !== "");
