@@ -23,19 +23,24 @@ type ProjectExtras = {
 
 // 🔧 Put your YouTube links here, using the EXACT repo name as key
 const PROJECT_CONFIG: Record<string, ProjectExtras> = {
-  // Example:
   // "employee-leave-management-system": {
   //   videoUrl: "https://www.youtube.com/watch?v=YOUR_VIDEO_ID",
   // },
 };
 
 export default function ProjectsClient({ repos }: Props) {
-  const [filter, setFilter] = useState("All");
+  // explicitly a string
+  const [filter, setFilter] = useState<string>("All");
 
-  const languages = [
-    "All",
-    ...Array.from(new Set(repos.map((r) => r.language).filter(Boolean))),
-  ];
+  // build a clean set of languages (no nulls)
+  const languageSet = new Set<string>();
+  repos.forEach((r) => {
+    if (r.language) {
+      languageSet.add(r.language);
+    }
+  });
+
+  const languages: string[] = ["All", ...Array.from(languageSet)];
 
   const filteredRepos =
     filter === "All" ? repos : repos.filter((r) => r.language === filter);
@@ -54,7 +59,7 @@ export default function ProjectsClient({ repos }: Props) {
                 : "border-slate-700 text-slate-300 hover:border-white"
             }`}
           >
-            {lang || "Unknown"}
+            {lang}
           </button>
         ))}
       </div>
