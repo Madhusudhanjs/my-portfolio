@@ -29,21 +29,23 @@ const PROJECT_CONFIG: Record<string, ProjectExtras> = {
 };
 
 export default function ProjectsClient({ repos }: Props) {
-  // explicitly a string
+  // filter is always a string
   const [filter, setFilter] = useState<string>("All");
 
-  // build a clean set of languages (no nulls)
-  const languageSet = new Set<string>();
-  repos.forEach((r) => {
-    if (r.language) {
-      languageSet.add(r.language);
-    }
-  });
-
-  const languages: string[] = ["All", ...Array.from(languageSet)];
+  // build languages as pure string[], no nulls
+  const languages: string[] = [
+    "All",
+    ...Array.from(
+      new Set(
+        repos.map((r) => r.language ?? "Unknown") // convert null to "Unknown"
+      )
+    ),
+  ];
 
   const filteredRepos =
-    filter === "All" ? repos : repos.filter((r) => r.language === filter);
+    filter === "All"
+      ? repos
+      : repos.filter((r) => (r.language ?? "Unknown") === filter);
 
   return (
     <div className="space-y-8">
