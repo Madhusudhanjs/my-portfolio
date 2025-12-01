@@ -198,15 +198,14 @@ export default function Home() {
             >
               <span className="block">Madhusudhan J&nbsp;S</span>
               <span className="mt-3 block text-sm md:text-base font-normal text-slate-400">
-                B.Tech CSE · Preparing for product-based roles · 10 LPA goal
+                B.Tech CSE · Full Stack Developer in progress · Building real-world products
               </span>
             </h1>
 
             <p className="text-sm md:text-base text-slate-500 md:text-slate-400 leading-relaxed">
-              I&apos;m a Computer Science graduate currently working at a
-              furniture shop while building my way into product-based companies.
-              I focus on Java, DSA and modern full stack development – combining
-              discipline, real-world projects and continuous learning.
+             I’m a Computer Science graduate focused on Java, DSA and modern full-stack development. 
+             I enjoy building real, meaningful applications and improving a little every day through discipline,
+              consistency and hands-on projects.
             </p>
 
             <div className="flex flex-wrap gap-4 pt-2">

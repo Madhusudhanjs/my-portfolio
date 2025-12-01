@@ -31,7 +31,7 @@ export default function ProjectsClient({ repos }: Props) {
   return (
     <div className="space-y-8">
       {/* HEADER (no filter for now) */}
-      <div className="text-center space-y-2">
+      <div className="text-left space-y-2">
        
         <p className="text-xs text-slate-400">
           All repositories fetched from my GitHub profile. Filtering will be
