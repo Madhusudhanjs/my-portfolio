@@ -169,7 +169,7 @@ export default function ResumeClient() {
             {/* Buttons */}
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <a
-                href="/resume/Madhusudhan_Resume.pdf"
+                href="/resume/Madhusudhan_ResumE.pdf"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -179,7 +179,12 @@ export default function ResumeClient() {
                 </button>
               </a>
 
-              <a href="/resume/Madhusudhan_Resume.pdf" download>
+              <a
+  href="/resume/Madhusudhan_Resume_v2.pdf"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+
                 <button className="rounded-2xl border border-gray-700 bg-black text-sm md:text-base inline-flex items-center px-4 py-2 hover:border-gray-400 transition">
                   <Download className="w-4 h-4 mr-2" />
                   Download
