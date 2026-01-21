@@ -413,7 +413,7 @@ export default function Home() {
             </a>
 
             <a
-              href="#"
+              href="https://www.linkedin.com/in/madhusudhan-j-s/"
               className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border transition ${
                 isDark
                   ? "border-slate-700 text-slate-200 hover:border-zinc-200 hover:bg-white/5"
@@ -425,7 +425,7 @@ export default function Home() {
             </a>
 
             <a
-              href="#"
+              href="https://www.naukri.com/mnjuser/homepage?"
               className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border transition ${
                 isDark
                   ? "border-slate-700 text-slate-200 hover:border-zinc-200 hover:bg-white/5"

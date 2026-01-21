@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import { Download, FileText, Wand2, Sparkles, FileDown } from "lucide-react";
 import jsPDF from "jspdf";
 
+const resumeUrl = "/resume/Madhusudhan_Resume.pdf";
+
 export default function ResumeClient() {
   const [jobTitle, setJobTitle] = useState("");
   const [jobDescription, setJobDescription] = useState("");
@@ -148,15 +150,21 @@ export default function ResumeClient() {
             </p>
 
             {/* Preview placeholder */}
-            <div className="mt-6 rounded-2xl border border-dashed border-gray-800 bg-black/40 p-4">
-              <div className="flex items-center justify-between text-xs text-gray-500">
-                <span>Preview</span>
-                <span>PDF · 1–2 pages</span>
-              </div>
-              <div className="mt-3 h-40 md:h-52 rounded-xl bg-gradient-to-br from-gray-950 via-gray-900 to-black flex items-center justify-center text-gray-600 text-[0.7rem] md:text-xs">
-                PDF preview coming soon
-              </div>
-            </div>
+            {/* PDF Preview */}
+<div className="mt-6 rounded-2xl border border-dashed border-gray-800 bg-black/40 p-4">
+  <div className="flex items-center justify-between text-xs text-gray-500">
+    <span>Preview</span>
+    <span>PDF · 1–2 pages</span>
+  </div>
+
+  <div className="mt-3 rounded-xl overflow-hidden border border-gray-900 bg-black">
+    <iframe
+      src={resumeUrl}
+      title="Resume Preview"
+      className="w-full h-64 md:h-80 rounded-xl"
+    />
+  </div>
+</div>
 
             {/* Buttons */}
             <div className="mt-6 flex flex-wrap items-center gap-3">

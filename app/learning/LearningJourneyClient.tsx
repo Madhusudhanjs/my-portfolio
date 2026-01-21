@@ -597,6 +597,40 @@ export default function LearningJourneyClient() {
             </button>
           </div>
         </section>
+        {/* STRUCTURED LEARNING (GFG) */}
+<section className="space-y-4">
+  <h2 className="text-lg font-semibold">Structured Learning</h2>
+
+  <motion.a
+    href="https://www.geeksforgeeks.org/batch/gfg-160-problems?tab=Resources"
+    target="_blank"
+    rel="noopener noreferrer"
+    whileHover={{ scale: 1.03 }}
+    className="block rounded-2xl border border-white/10 bg-white/5 backdrop-blur-lg p-5 shadow-[0_0_25px_rgba(0,0,0,0.8)] hover:border-emerald-400 transition"
+  >
+    <div className="flex items-center justify-between">
+      <div>
+        <p className="text-sm font-semibold text-emerald-300">
+          GeeksforGeeks – 160 DSA Problems
+        </p>
+        <p className="text-xs text-slate-400 mt-1">
+          Arrays, Strings, Linked List, Stack, Queue, Trees, Graphs, DP
+        </p>
+      </div>
+
+      <span className="text-[10px] rounded-full bg-emerald-500/15 border border-emerald-400/40 px-3 py-1 text-emerald-200">
+        In Progress
+      </span>
+    </div>
+
+    <p className="text-[11px] text-slate-300 mt-3 leading-relaxed">
+      Actively following a structured DSA problem set to strengthen problem-
+      solving skills, improve coding patterns, and prepare for technical
+      interviews. Click to view the official GFG learning track.
+    </p>
+  </motion.a>
+</section>
+
 
         {/* LOCAL ANALYSIS */}
         <section className="space-y-3">
