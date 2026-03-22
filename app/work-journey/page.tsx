@@ -35,7 +35,7 @@ export default function WorkJourneyPage() {
               My Work Journey
             </h1>
             <p className="text-lg md:text-xl text-zinc-400 font-light max-w-2xl mx-auto md:mx-0">
-              From continuous learning to architecting real-world systems. An interactive timeline of the impact I've made.
+              From continuous learning to architecting real-world systems. An interactive timeline of the impact I&apos;ve made.
             </p>
           </motion.div>
 

@@ -2,9 +2,9 @@
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const body = await req.json().catch(() => ({} as any));
+  const body = (await req.json().catch(() => ({}))) as { jobTitle?: string; jobDescription?: string };
   const jobTitle = (body.jobTitle ?? "").trim();
-  const jobDescription = (body.jobDescription ?? "").trim();
+  // const jobDescription = (body.jobDescription ?? "").trim();
 
   const title = jobTitle || "your role";
 

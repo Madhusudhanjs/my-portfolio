@@ -14,7 +14,6 @@ export default function ResumeClient() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [tailoredResume, setTailoredResume] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,8 +37,9 @@ export default function ResumeClient() {
 
       const data = await res.json();
       setTailoredResume(data.result || "");
-    } catch (err: any) {
-      setError(err?.message || "Something went wrong. Please try again.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+      setError(message);
     } finally {
       setIsGenerating(false);
     }
@@ -47,8 +47,6 @@ export default function ResumeClient() {
 
   const handleDownloadPdf = () => {
     try {
-      setIsDownloadingPdf(true);
-
       const doc = new jsPDF();
       const title = jobTitle || "Target Role";
       const heading = `Tailored Resume Summary – ${title}`;
@@ -64,9 +62,7 @@ export default function ResumeClient() {
       doc.text(lines, 10, 32);
 
       doc.save("Madhusudhan_Tailored_Resume.pdf");
-    } finally {
-      setIsDownloadingPdf(false);
-    }
+    } catch {}
   };
 
   return (

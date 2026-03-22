@@ -23,13 +23,6 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     disabled,
     ...props 
   }, ref) => {
-    // Filter out props that conflict with motion props
-    const { 
-      onDrag, onDragStart, onDragEnd, 
-      onAnimationStart, onAnimationEnd,
-      ...safeProps 
-    } = props as any;
-
     return (
       <motion.button
         ref={ref}
@@ -53,7 +46,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={disabled || isLoading}
         whileHover={!disabled && !isLoading ? { scale: 1.02 } : {}}
         whileTap={!disabled && !isLoading ? { scale: 0.98 } : {}}
-        {...safeProps}
+        {...(props as unknown as Record<string, unknown>)}
       >
         <AnimatePresence mode='wait'>
           {isLoading ? (

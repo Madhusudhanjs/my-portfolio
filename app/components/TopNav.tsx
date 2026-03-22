@@ -4,7 +4,9 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import ThemeToggle from './ThemeToggle';
 import Button from './ui/Button';
-import { Bell, Search, User } from 'lucide-react';
+import { Bell, Search } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 
 export default function TopNav() {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -19,9 +21,9 @@ export default function TopNav() {
       <div className='max-w-7xl mx-auto px-6 py-4 flex items-center justify-between'>
         {/* Left: Branding */}
         <div className='flex items-center gap-3'>
-          <div className='w-10 h-10 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-xl shadow-xl flex items-center justify-center'>
+          <Link href="/" className='w-10 h-10 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-xl shadow-xl flex items-center justify-center cursor-pointer'>
             <span className='text-sm font-bold text-white'>MAAI</span>
-          </div>
+          </Link>
           <div className='hidden md:block'>
             <h1 className='text-lg font-bold bg-gradient-to-r from-gray-200 to-gray-400 bg-clip-text text-transparent'>
               Dashboard
@@ -68,9 +70,11 @@ export default function TopNav() {
 
           {/* Profile */}
           <Button variant='ghost' size='sm' className='w-10 h-10 p-0 overflow-hidden rounded-full'>
-            <img 
+            <Image 
               src='/profile.jpg' 
               alt='Profile' 
+              width={40}
+              height={40}
               className='w-10 h-10 rounded-full object-cover shadow-2xl ring-2 ring-white/20'
             />
           </Button>

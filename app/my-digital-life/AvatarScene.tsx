@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useMemo } from "react";
+import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { 
   Float, 
@@ -161,11 +161,11 @@ export default function AvatarScene({ mode }: { mode: SceneMode }) {
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
 
   // Dynamic Camera Position based on mode
-  useFrame((state) => {
+  useFrame(() => {
     if (!cameraRef.current) return;
     
-    let targetPos = new THREE.Vector3(0, 0.5, 4);
-    let targetLookAt = new THREE.Vector3(0, 0.5, 0);
+    const targetPos = new THREE.Vector3(0, 0.5, 4);
+    const targetLookAt = new THREE.Vector3(0, 0.5, 0);
 
     switch (mode) {
       case "sales":
@@ -185,6 +185,7 @@ export default function AvatarScene({ mode }: { mode: SceneMode }) {
     }
 
     cameraRef.current.position.lerp(targetPos, 0.05);
+    cameraRef.current.lookAt(targetLookAt);
   });
 
   return (

@@ -1,4 +1,5 @@
 import ProjectsClient from "./ProjectsClient";
+import Link from "next/link";
 
 type Repo = {
   id: number;
@@ -42,12 +43,12 @@ export default async function ProjectsPage() {
 
         {/* Back Home */}
         <div className="flex justify-between text-xs">
-          <a
+          <Link
             href="/"
             className="px-3 py-1.5 border border-slate-700 rounded-full hover:border-white transition"
           >
             ← Back to Home
-          </a>
+          </Link>
         </div>
 
         {/* Heading */}

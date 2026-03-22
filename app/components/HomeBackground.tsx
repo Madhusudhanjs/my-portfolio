@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useMemo } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, RootState } from "@react-three/fiber";
 import { Sphere, MeshDistortMaterial, Points, PointMaterial, Grid } from "@react-three/drei";
 import { motion } from "framer-motion";
 import * as THREE from "three";
@@ -20,7 +20,7 @@ function ParticleField() {
     return pos;
   }, []);
 
-  useFrame((state: any) => {
+  useFrame((state: RootState) => {
     if (!ref.current) return;
     ref.current.rotation.x = state.clock.elapsedTime * 0.03 + (state.pointer.y * 0.05);
     ref.current.rotation.y = state.clock.elapsedTime * 0.02 + (state.pointer.x * 0.05);
@@ -37,7 +37,7 @@ function ParticleField() {
 function HologramGrid() {
   const gridRef = useRef<THREE.Group>(null);
   
-  useFrame((state: any) => {
+  useFrame((state: RootState) => {
     if (!gridRef.current) return;
     // Animate grid slowly moving towards camera for continuous depth effect
     gridRef.current.position.z = (state.clock.elapsedTime * 0.3) % 1;
@@ -72,7 +72,7 @@ function AnimatedOrbs() {
   const orb2Ref = useRef<THREE.Mesh>(null);
   const orb3Ref = useRef<THREE.Mesh>(null);
 
-  useFrame((state: any) => {
+  useFrame((state: RootState) => {
     if (!groupRef.current) return;
     
     // Smooth mouse parallax effect

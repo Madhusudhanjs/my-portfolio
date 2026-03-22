@@ -1,18 +1,20 @@
 "use client";
 
 import { useRef, useMemo, useState } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, RootState } from "@react-three/fiber";
 import { Text, Html, Float, Sphere, MeshDistortMaterial, Sparkles } from "@react-three/drei";
 import * as THREE from "three";
+import Image from "next/image";
 
 // The abstract AI Orb representing the developer
 function PremiumOrb() {
   const orbRef = useRef<THREE.Mesh>(null);
   const glowRef = useRef<THREE.PointLight>(null);
 
-  useFrame((state: any) => {
+  useFrame((state: RootState) => {
     if (!orbRef.current) return;
-    const scale = 1 + Math.sin(state.clock.elapsedTime * 2) * 0.05;
+    const { clock } = state;
+    const scale = 1 + Math.sin(clock.elapsedTime * 2) * 0.05;
     orbRef.current.scale.set(scale, scale, scale);
   });
 
@@ -38,26 +40,27 @@ function PremiumOrb() {
   );
 }
 
+const ORBITING_TEXTS = ["Working", "Learning", "Enjoying Tech"];
+
 // 3D text rings orbiting the core
 function OrbitingTexts({ isHuman }: { isHuman: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
-  useFrame((state) => {
+  useFrame((state: RootState) => {
     if (groupRef.current) {
       groupRef.current.rotation.y = state.clock.elapsedTime * 0.4;
     }
   });
 
-  const texts = ["Working", "Learning", "Enjoying Tech"];
   const radius = 2.4;
   
-  const positions = useMemo(() => texts.map((_, i) => {
-    const angle = (i / texts.length) * Math.PI * 2;
+  const positions = useMemo(() => ORBITING_TEXTS.map((_, i) => {
+    const angle = (i / ORBITING_TEXTS.length) * Math.PI * 2;
     return new THREE.Vector3(Math.cos(angle) * radius, 0, Math.sin(angle) * radius);
-  }), [texts.length, radius]);
+  }), [radius]);
 
   return (
     <group ref={groupRef} rotation={[0.4, 0, 0]}>
-      {texts.map((text, i) => (
+      {ORBITING_TEXTS.map((text, i) => (
         <group key={i} position={positions[i]}>
           <Text 
             fontSize={0.35} 
@@ -85,7 +88,7 @@ function FlipCore({ isHuman }: { isHuman: boolean }) {
   const orbContainerRef = useRef<THREE.Group>(null);
   const humanContainerRef = useRef<THREE.Group>(null);
 
-  useFrame((_, delta) => {
+  useFrame((_state: RootState, delta) => {
     if (!groupRef.current || !orbContainerRef.current || !humanContainerRef.current) return;
     
     // Smoothly rotate the entire core between 0 (AI) and PI (Human)
@@ -113,7 +116,7 @@ function FlipCore({ isHuman }: { isHuman: boolean }) {
           <div className={`w-44 h-44 md:w-52 md:h-52 rounded-full overflow-hidden border-4 bg-black transition-colors duration-500 shadow-2xl ${
             isHuman ? 'border-emerald-400 shadow-[0_0_40px_rgba(52,211,153,0.3)]' : 'border-white/20'
           }`}>
-            <img src="/profile.jpg" alt="Profile" className="object-cover w-full h-full" draggable="false" />
+            <Image src="/profile.jpg" alt="Profile" width={208} height={208} className="object-cover w-full h-full" draggable="false" />
           </div>
         </Html>
       </group>

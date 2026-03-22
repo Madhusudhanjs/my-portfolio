@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, RootState } from "@react-three/fiber";
 import { Points, PointMaterial, Float, Icosahedron, Box, Torus } from "@react-three/drei";
 import { useRef, useMemo } from "react";
 import * as THREE from "three";
@@ -18,10 +18,11 @@ function SubtleParticles() {
     return pos;
   }, []);
 
-  useFrame((state: any) => {
+  useFrame((state: RootState) => {
     if (!ref.current) return;
-    ref.current.rotation.x = state.clock.elapsedTime * 0.02 + (state.pointer.y * 0.02);
-    ref.current.rotation.y = state.clock.elapsedTime * 0.015 + (state.pointer.x * 0.02);
+    const { clock, pointer } = state;
+    ref.current.rotation.x = clock.elapsedTime * 0.02 + (pointer.y * 0.02);
+    ref.current.rotation.y = clock.elapsedTime * 0.015 + (pointer.x * 0.02);
   });
 
   return (

@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Button from './ui/Button';
-import Card from './ui/Card';
 import { cn } from '../lib/utils';
 import { 
   LayoutDashboard, 

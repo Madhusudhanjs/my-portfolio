@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useMemo } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, RootState } from "@react-three/fiber";
 import { Float, Sparkles, PerspectiveCamera, Text } from "@react-three/drei";
 import * as THREE from "three";
 import { MotionValue } from "framer-motion";
@@ -30,7 +30,7 @@ function SceneElements({ scrollYProgress }: { scrollYProgress: MotionValue<numbe
     }));
   }, []);
 
-  useFrame((state: any) => {
+  useFrame((state: RootState) => {
     const scroll = scrollYProgress.get();
     
     // Zoom camera slightly based on scroll

@@ -3,6 +3,8 @@
 import { useEffect, useState, ChangeEvent } from "react";
 import { motion } from "framer-motion";
 import { Award, GraduationCap, Sparkles } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 /* ==================== TYPES ==================== */
 
@@ -35,195 +37,7 @@ type ImageNote = {
 const LOGS_KEY = "maai-learning-logs-v3";
 const TASKS_KEY = "maai-learning-tasks-v3";
 
-/* ==================== CERTIFICATES ==================== */
-
-const CERTIFICATES = [
-  {
-    id: 1,
-    title: "Java Full Stack Program",
-    provider: "LiveTech",
-    year: "2025",
-    tag: "Core + Real Projects",
-    url: "#", // later: link to PDF / drive / image
-  },
-  {
-    id: 2,
-    title: "DSA Internship Certificate",
-    provider: "College / Internship",
-    year: "2024",
-    tag: "Problem Solving",
-    url: "#",
-  },
-  {
-    id: 3,
-    title: "Frontend (React + Next.js)",
-    provider: "Self Project Track",
-    year: "2025",
-    tag: "Modern Web",
-    url: "#",
-  },
-];
-
-/* ==================== ACHIEVEMENTS ROTATOR ==================== */
-
-function AchievementsRotator() {
-  const [index, setIndex] = useState(0);
-  const [showModal, setShowModal] = useState(false);
-
-  const current = CERTIFICATES[index];
-  const total = CERTIFICATES.length;
-
-  const next = () => setIndex((i) => (i + 1) % total);
-  const prev = () => setIndex((i) => (i - 1 + total) % total);
-
-  return (
-    <>
-      <div className="relative rounded-3xl border border-white/15 bg-gradient-to-br from-slate-950 via-slate-900 to-black px-5 py-4 shadow-[0_0_45px_rgba(0,0,0,1)] w-full md:w-[280px]">
-        {/* glow */}
-        <div className="pointer-events-none absolute -top-10 -right-6 h-24 w-24 rounded-full bg-cyan-400/30 blur-3xl" />
-
-        <div className="flex items-center justify-between gap-2 mb-2">
-          <div className="flex items-center gap-2">
-            <div className="rounded-xl bg-cyan-500/15 p-2">
-              <Award className="w-4 h-4 text-cyan-300" />
-            </div>
-            <div className="text-[11px] uppercase tracking-[0.2em] text-slate-400">
-              Certifications
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setShowModal(true)}
-            className="inline-flex items-center gap-1 rounded-full bg-white/5 px-2.5 py-1 text-[10px] text-slate-200 border border-white/10 hover:border-cyan-400 hover:text-cyan-200"
-          >
-            <Sparkles className="w-3 h-3" />
-            View
-          </button>
-        </div>
-
-        {/* main card */}
-        <motion.div
-          key={current.id}
-          initial={{ opacity: 0, y: 10, scale: 0.98 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.25 }}
-          className="rounded-2xl border border-white/15 bg-gradient-to-br from-slate-900 via-slate-950 to-black px-4 py-3"
-        >
-          <div className="flex items-center justify-between gap-2">
-            <p className="text-[11px] text-cyan-300 flex items-center gap-1">
-              <GraduationCap className="w-3.5 h-3.5" />
-              {current.year}
-            </p>
-            <span className="text-[10px] rounded-full bg-cyan-500/15 border border-cyan-400/40 px-2 py-0.5 text-cyan-100">
-              {current.tag}
-            </span>
-          </div>
-
-          <p className="mt-2 text-xs font-semibold text-zinc-50 leading-snug">
-            {current.title}
-          </p>
-          <p className="mt-1 text-[11px] text-slate-300">{current.provider}</p>
-        </motion.div>
-
-        {/* controls */}
-        <div className="mt-3 flex items-center justify-between text-[10px] text-slate-400">
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-              onClick={prev}
-              className="h-6 w-6 rounded-full border border-white/15 flex items-center justify-center hover:border-cyan-400 hover:text-cyan-200"
-            >
-              ‹
-            </button>
-            <button
-              type="button"
-              onClick={next}
-              className="h-6 w-6 rounded-full border border-white/15 flex items-center justify-center hover:border-cyan-400 hover:text-cyan-200"
-            >
-              ›
-            </button>
-          </div>
-          <div className="flex items-center gap-1">
-            {CERTIFICATES.map((c, i) => (
-              <button
-                key={c.id}
-                type="button"
-                onClick={() => setIndex(i)}
-                className={`h-1.5 w-4 rounded-full transition ${
-                  i === index
-                    ? "bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.9)]"
-                    : "bg-slate-600 hover:bg-slate-400"
-                }`}
-              />
-            ))}
-          </div>
-          <span>
-            {index + 1}/{total}
-          </span>
-        </div>
-      </div>
-
-      {/* modal with big details */}
-      {showModal && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-          <div
-            className="absolute inset-0"
-            onClick={() => setShowModal(false)}
-          />
-          <motion.div
-            initial={{ opacity: 0, scale: 0.85, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.25 }}
-            className="relative z-50 w-[92%] max-w-lg rounded-3xl border border-white/20 bg-gradient-to-br from-slate-950 via-slate-900 to-black px-6 py-6 shadow-[0_0_80px_rgba(0,0,0,1.0)]"
-          >
-            <button
-              type="button"
-              onClick={() => setShowModal(false)}
-              className="absolute top-3 right-4 text-[11px] text-slate-400 hover:text-slate-100"
-            >
-              ✕
-            </button>
-
-            <div className="flex items-center gap-3 mb-3">
-              <div className="rounded-2xl bg-cyan-500/15 border border-cyan-400/40 p-2.5">
-                <Award className="w-5 h-5 text-cyan-300" />
-              </div>
-              <div className="space-y-0.5">
-                <p className="text-[11px] uppercase tracking-[0.25em] text-cyan-300">
-                  Achievement
-                </p>
-                <h3 className="text-lg font-semibold text-zinc-50">
-                  {current.title}
-                </h3>
-                <p className="text-sm text-slate-300">
-                  {current.provider} · {current.year}
-                </p>
-              </div>
-            </div>
-
-            <p className="text-[11px] text-slate-400 leading-relaxed mb-3">
-              You can later replace this text with more detail: duration,
-              topics covered, and what you built. For now it cleanly highlights
-              that you&apos;re investing in Java, DSA, and full stack learning.
-            </p>
-
-            {current.url !== "#" && (
-              <a
-                href={current.url}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 text-[11px] text-cyan-300 underline hover:text-cyan-200"
-              >
-                Open certificate file
-              </a>
-            )}
-          </motion.div>
-        </div>
-      )}
-    </>
-  );
-}
+/* ==================== MAIN LEARNING PAGE ==================== */
 
 /* ==================== MAIN LEARNING PAGE ==================== */
 
@@ -467,9 +281,7 @@ export default function LearningJourneyClient() {
     if (!logsByDate[l.date]) logsByDate[l.date] = [];
     logsByDate[l.date].push(l);
   });
-  const sortedDates = Object.keys(logsByDate).sort((a, b) =>
-    a < b ? 1 : -1
-  );
+  // const sortedDates = Object.keys(logsByDate).sort((a, b) => a < b ? 1 : -1);
 
   const completedTasks = tasks.filter((t) => t.done).length;
 
@@ -485,9 +297,9 @@ export default function LearningJourneyClient() {
         {/* HEADER + CERTIFICATIONS */}
         <div className="flex flex-col gap-10 w-full mb-4 relative">
           <div className="absolute -top-4 right-0 z-10">
-            <a href="/" className="inline-flex items-center gap-2 rounded-full border border-slate-700 px-4 py-1.5 text-xs hover:border-white hover:bg-white/5 transition">
+            <Link href="/" className="inline-flex items-center gap-2 rounded-full border border-slate-700 px-4 py-1.5 text-xs hover:border-white hover:bg-white/5 transition">
               ← Back to Home
-            </a>
+            </Link>
           </div>
 
           {/* 1. CERTIFICATES SECTION */}
@@ -813,10 +625,13 @@ export default function LearningJourneyClient() {
                     key={img.id}
                     className="rounded-xl overflow-hidden border border-slate-800 bg-black/60"
                   >
-                    <img
+                    <Image
                       src={img.dataUrl}
                       alt={img.name}
+                      width={400}
+                      height={128}
                       className="w-full h-32 object-cover"
+                      unoptimized
                     />
                     <div className="px-2 py-2">
                       <p className="text-[11px] text-slate-200 truncate">

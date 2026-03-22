@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, RootState } from "@react-three/fiber";
 import { Sphere, MeshDistortMaterial, Sparkles, ContactShadows, Float } from "@react-three/drei";
 import * as THREE from "three";
 
@@ -9,37 +9,47 @@ function PremiumOrb() {
   const orbRef = useRef<THREE.Mesh>(null);
   const glowRef = useRef<THREE.PointLight>(null);
 
-  useFrame((state: any) => {
+  useFrame((state: RootState) => {
     if (!orbRef.current) return;
     
+    const { clock, pointer } = state;
     // Breathing pulse effect (scale)
-    const scale = 1 + Math.sin(state.clock.elapsedTime * 2) * 0.05;
+    const scale = 1 + Math.sin(clock.elapsedTime * 2) * 0.05;
     orbRef.current.scale.set(scale, scale, scale);
 
     // Mouse parallax
-    const targetX = state.pointer.x * 0.3;
-    const targetY = state.pointer.y * 0.3;
+    const targetX = pointer.x * 0.3;
+    const targetY = pointer.y * 0.3;
     orbRef.current.position.x += (targetX - orbRef.current.position.x) * 0.05;
     orbRef.current.position.y += (targetY - orbRef.current.position.y) * 0.05;
   });
 
   return (
     <group>
-      <Float speed={2.5} rotationIntensity={1} floatIntensity={2} floatingRange={[-0.1, 0.1]}>
+      <Float speed={3} rotationIntensity={1.5} floatIntensity={2.5}>
         <Sphere ref={orbRef} args={[1.3, 64, 64]}>
           <MeshDistortMaterial
-            color="#0a0a0a" // deep matte black
+            color="#050505"
             attach="material"
-            distort={0.2}
-            speed={1.5}
-            roughness={0.4}
-            metalness={0.8}
-            clearcoat={0.6}
-            clearcoatRoughness={0.2}
+            distort={0.4}
+            speed={2}
+            roughness={0.2}
+            metalness={1}
+            clearcoat={1}
           />
         </Sphere>
-        {/* Subtle white inner glow that tracks the orb */}
-        <pointLight ref={glowRef} color="#ffffff" intensity={2} distance={4} />
+        {/* Tech Wireframe Overlay */}
+        <Sphere args={[1.32, 32, 32]}>
+          <meshPhongMaterial 
+            color="#10b981" 
+            wireframe 
+            transparent 
+            opacity={0.15} 
+            emissive="#10b981"
+            emissiveIntensity={0.5}
+          />
+        </Sphere>
+        <pointLight ref={glowRef} color="#10b981" intensity={3} distance={5} />
       </Float>
 
       {/* Floating particles around character */}

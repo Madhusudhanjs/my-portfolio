@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -15,7 +15,7 @@ type Theme = "dark" | "light";
 const aboutTexts = [
   "I enjoy turning complex problems into clean, maintainable solutions. I'm building a strong base with Java and DSA while using React and Next.js to create full stack experiences.",
   "Currently, I am architecting advanced APIs and scalable backends at Marque Magic, leveraging FastAPI and SQLAlchemy to natively process vital workflows efficiently.",
-  "At Siemens Gamesa, I manage enterprise IT infrastructure and resolve mission-critical hardware vulnerabilities, keeping systems perfectly stable globally upon thousands of nodes.",
+  "At Siemens Gamesa, I manage enterprise IT infrastructure and resolve mission-critical hardware vulnerabilities, keeping systems perfectly stable globally across thousands of nodes.",
   "I constantly push boundaries. Balancing a full-time IT admin role with rapid software skill-building has trained me to stay strictly disciplined and hungry to improve every single day."
 ];
 
@@ -24,24 +24,28 @@ function TypewriterText({ text }: { text: string }) {
   const [displayedText, setDisplayedText] = useState("");
 
   useEffect(() => {
-    setDisplayedText("");
     let index = 0;
-    const interval = setInterval(() => {
-      setDisplayedText((prev) => prev + text.charAt(index));
-      index++;
-      if (index >= text.length) clearInterval(interval);
-    }, 15); // extremely fast linear type-speed
+    let timeoutId: any;
 
-    return () => clearInterval(interval);
+    const type = () => {
+      if (index < text.length) {
+        setDisplayedText(text.slice(0, index + 1));
+        index++;
+        timeoutId = setTimeout(type, 30);
+      }
+    };
+
+    type();
+    return () => clearTimeout(timeoutId);
   }, [text]);
 
   return (
     <p className="text-sm md:text-base leading-relaxed text-slate-400 w-full text-left">
       {displayedText}
-      <motion.span 
-         animate={{ opacity: [1, 0] }} 
-         transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
-         className="inline-block w-[6px] h-[13px] md:h-[15px] bg-emerald-400 ml-1 translate-y-[2px]"
+      <motion.span
+        animate={{ opacity: [1, 0] }}
+        transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
+        className="inline-block w-[6px] h-[13px] md:h-[15px] bg-emerald-400 ml-1 translate-y-[2px]"
       />
     </p>
   );
@@ -79,17 +83,17 @@ export default function Home() {
 
         {/* HERO SECTION */}
         <section className="flex flex-col gap-8">
-          
+
           {/* TOP ROW: Title on Left, Avatar strictly on Top Right */}
           <div className="flex flex-col-reverse md:flex-row justify-between items-center md:items-start gap-8">
             <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} className="space-y-4 flex-1 w-full text-center md:text-left">
-              
-              <a href="/work-journey" className={`inline-flex items-center gap-3 px-4 py-2 rounded-full border transition backdrop-blur-md cursor-pointer text-xs md:text-sm shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:-translate-y-0.5 ${isDark ? "border-white/10 bg-white/5 hover:bg-white/10" : "border-slate-300 bg-white/60 hover:bg-white"}`}>
+
+              <Link href="/work-journey" className={`inline-flex items-center gap-3 px-4 py-2 rounded-full border transition backdrop-blur-md cursor-pointer text-xs md:text-sm shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:-translate-y-0.5 ${isDark ? "border-white/10 bg-white/5 hover:bg-white/10" : "border-slate-300 bg-white/60 hover:bg-white"}`}>
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                 <span className="font-medium text-emerald-400">Current Impact: Siemens Gamesa</span>
                 <span className="opacity-50 hidden sm:inline">|</span>
-                <span className="font-semibold text-zinc-100 hidden sm:inline">View Working ➔</span>
-              </a>
+                <span className="font-semibold text-zinc-100 hidden sm:inline">View Work ➔</span>
+              </Link>
 
               <h1 className={`text-4xl md:text-6xl font-bold leading-tight tracking-tight ${isDark ? "text-slate-50" : "text-slate-900"}`}>
                 <span className="block">Madhusudhan J S</span>
@@ -100,10 +104,10 @@ export default function Home() {
               <div className="relative min-h-[140px] md:min-h-[110px] w-full bg-white/5 border border-white/5 rounded-2xl p-6 backdrop-blur-sm mt-6 text-left">
                 <div className="flex items-center justify-between mb-3 border-b border-white/10 pb-3">
                   <span className="text-[10px] md:text-xs text-emerald-400 uppercase tracking-widest font-bold flex items-center gap-2">
-                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-[pulse_2s_ease-in-out_Infinity]" /> LIVE ABOUT ME FEED ({textIndex + 1}/{aboutTexts.length})
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-[pulse_2s_ease-in-out_Infinity]" /> LIVE ABOUT ME FEED ({textIndex + 1}/{aboutTexts.length})
                   </span>
                 </div>
-                <TypewriterText text={aboutTexts[textIndex]} />
+                <TypewriterText key={textIndex} text={aboutTexts[textIndex]} />
               </div>
             </motion.div>
 
@@ -111,15 +115,45 @@ export default function Home() {
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }} className="shrink-0 w-full max-w-xs md:max-w-none md:w-auto flex justify-center">
               <button type="button" onClick={handlePhotoClick} className={`relative rounded-3xl border p-4 md:p-5 w-fit outline-none focus:ring-2 focus:ring-zinc-300/60 shadow-[0_0_45px_rgba(0,0,0,0.2)] backdrop-blur-xl transition-colors duration-500 ${isDark ? "border-white/10 bg-white/5" : "border-slate-200 bg-white/90"}`}>
                 <div className="flex flex-row items-center justify-start gap-4">
-                  
+
                   {/* Seamless 3D Flip Card */}
                   <div className="relative w-28 h-28 md:w-36 md:h-36 shrink-0" style={{ perspective: "1000px" }}>
-                    <motion.div animate={{ rotateY: mode === "robot" ? 0 : 180 }} transition={{ duration: 0.6, type: "spring", stiffness: 100, damping: 20 }} className="w-full h-full relative" style={{ transformStyle: "preserve-3d" }}>
+                    <motion.div 
+                      animate={{ rotateY: mode === "robot" ? 0 : 180 }} 
+                      transition={{ duration: 0.6, type: "spring", stiffness: 100, damping: 20 }} 
+                      className="w-full h-full relative" 
+                      style={{ transformStyle: "preserve-3d" }}
+                    >
+                      {/* Robot Side */}
                       <div className="absolute inset-0 w-full h-full rounded-full border border-white/20 bg-zinc-950/80 shadow-[0_0_40px_rgba(255,255,255,0.03)] overflow-hidden pointer-events-none" style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}>
                         <Hero3DCharacter />
                       </div>
-                      <div className="absolute inset-0 w-full h-full rounded-full border border-white/20 bg-black shadow-[0_0_40px_rgba(255,255,255,0.05)] overflow-hidden pointer-events-none" style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
-                        <Image src="/profile.jpg" alt="Profile photo" width={144} height={144} className="object-cover w-full h-full" />
+                      
+                      {/* Human Side (Professional Profile) */}
+                      <div className="absolute inset-0 w-full h-full rounded-full border-2 border-emerald-400/20 bg-zinc-900 shadow-[0_0_60px_rgba(16,185,129,0.15)] overflow-hidden pointer-events-none" style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
+                        <motion.div 
+                          animate={{ y: [0, -6, 0], scale: [1, 1.02, 1] }} 
+                          transition={{ 
+                            y: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+                            scale: { duration: 8, repeat: Infinity, ease: "easeInOut" }
+                          }}
+                          className="w-full h-full group"
+                        >
+                          <Image 
+                            src="/profile.jpg" 
+                            alt="Profile photo" 
+                            width={300} 
+                            height={300} 
+                            className="object-cover w-full h-full scale-[1.05] transition-transform duration-700 group-hover:scale-115" 
+                            priority
+                          />
+                        </motion.div>
+                        {/* Professional light sweep effect */}
+                        <motion.div 
+                          animate={{ x: ["-100%", "200%"] }}
+                          transition={{ duration: 3, repeat: Infinity, repeatDelay: 5, ease: "linear" }}
+                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12"
+                        />
                       </div>
                     </motion.div>
                   </div>
@@ -200,8 +234,8 @@ export default function Home() {
         {/* FINAL CTA: MY DIGITAL LIFE */}
         <div className="w-full pt-20 pb-12">
           <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-500/10 to-transparent mb-20" />
-          
-          <motion.section 
+
+          <motion.section
             initial={{ opacity: 0, scale: 0.98 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, margin: "-50px" }}
@@ -210,8 +244,8 @@ export default function Home() {
           >
             {/* Background Glow */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
-            
-            <motion.div 
+
+            <motion.div
               whileHover={{ y: -8, scale: 1.01 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
               className={`max-w-3xl mx-auto rounded-[2.5rem] p-10 md:p-16 border shadow-2xl relative overflow-hidden flex flex-col items-center text-center gap-8 ${isDark ? "border-white/5 bg-zinc-900/30 backdrop-blur-xl" : "border-slate-200 bg-white"}`}
@@ -220,14 +254,14 @@ export default function Home() {
                 <span className="text-[10px] text-blue-500 uppercase tracking-[0.4em] font-black block opacity-80">
                   The Journey
                 </span>
-                
+
                 <h2 className="text-3xl md:text-5xl font-black tracking-tighter uppercase italic leading-none">
-                   My <span className="text-blue-500">Digital</span> World
+                  My <span className="text-blue-500">Digital</span> World
                 </h2>
-                
+
                 <div className="space-y-3 max-w-xl mx-auto">
                   <p className="text-slate-400 font-medium text-sm md:text-base leading-relaxed">
-                    "From serving 3000+ customers to building scalable systems. My journey is defined by human interaction and code."
+                    &quot;From serving 3000+ customers to building scalable systems. My journey is defined by human interaction and code.&quot;
                   </p>
                   <p className="text-slate-500 text-[11px] md:text-xs font-semibold uppercase tracking-wider">
                     Communication · Problem Solving · Engineering
@@ -235,24 +269,24 @@ export default function Home() {
                 </div>
               </div>
 
-              <Link 
-                href="/my-digital-life" 
+              <Link
+                href="/my-digital-life"
                 className={`group relative flex items-center gap-4 px-8 py-4 rounded-full font-black uppercase tracking-[0.2em] text-[10px] md:text-xs transition-all shadow-xl hover:shadow-blue-500/20 ${isDark ? "bg-white text-black hover:bg-blue-600 hover:text-white" : "bg-black text-white hover:bg-blue-600"}`}
               >
-                 <span className="relative z-10 flex items-center gap-2">
-                   Enter My Digital World
-                   <span className="group-hover:translate-x-1.5 transition-transform duration-300">➔</span>
-                 </span>
-                 <div className="absolute inset-0 rounded-full bg-blue-500 opacity-0 group-hover:opacity-100 blur-lg transition-opacity duration-500 -z-10" />
+                <span className="relative z-10 flex items-center gap-2">
+                  Enter My Digital World
+                  <span className="group-hover:translate-x-1.5 transition-transform duration-300">➔</span>
+                </span>
+                <div className="absolute inset-0 rounded-full bg-blue-500 opacity-0 group-hover:opacity-100 blur-lg transition-opacity duration-500 -z-10" />
               </Link>
 
               {/* Parallax elements */}
-              <motion.div 
+              <motion.div
                 animate={{ y: [0, -15, 0], opacity: [0.05, 0.1, 0.05] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                 className="absolute -top-10 -right-10 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"
               />
-              <motion.div 
+              <motion.div
                 animate={{ y: [0, 15, 0], opacity: [0.05, 0.08, 0.05] }}
                 transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
                 className="absolute -bottom-10 -left-10 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"
