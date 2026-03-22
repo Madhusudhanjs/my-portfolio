@@ -140,6 +140,7 @@ export default function ResumeClient() {
                 onChange={(e) => setJobTitle(e.target.value)}
                 placeholder="Job Title (optional)"
                 className="w-full px-3 py-2 bg-black border border-gray-800 rounded"
+                suppressHydrationWarning
               />
 
               <textarea
@@ -147,12 +148,14 @@ export default function ResumeClient() {
                 onChange={(e) => setJobDescription(e.target.value)}
                 placeholder="Paste job description"
                 className="w-full min-h-[130px] px-3 py-2 bg-black border border-gray-800 rounded"
+                suppressHydrationWarning
               />
 
               <button
                 type="submit"
                 disabled={isGenerating}
                 className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
+                suppressHydrationWarning
               >
                 Generate
               </button>
@@ -180,3 +183,4 @@ export default function ResumeClient() {
     </section>
   );
 }
+

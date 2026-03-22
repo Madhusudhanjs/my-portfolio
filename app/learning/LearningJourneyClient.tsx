@@ -228,6 +228,7 @@ function AchievementsRotator() {
 /* ==================== MAIN LEARNING PAGE ==================== */
 
 export default function LearningJourneyClient() {
+  const [isMounted, setIsMounted] = useState(false);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [images, setImages] = useState<ImageNote[]>([]);
@@ -254,6 +255,7 @@ export default function LearningJourneyClient() {
 
   /* ----- load from localStorage ----- */
   useEffect(() => {
+    setIsMounted(true);
     if (typeof window === "undefined") return;
     try {
       const savedLogs = window.localStorage.getItem(LOGS_KEY);
@@ -473,30 +475,58 @@ export default function LearningJourneyClient() {
 
   /* ==================== UI ==================== */
 
+  if (!isMounted) {
+    return <main className="min-h-screen bg-gradient-to-br from-[#02010A] via-[#050816] to-black" />;
+  }
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-[#02010A] via-[#050816] to-black text-slate-100 px-4 py-12">
       <div className="max-w-6xl mx-auto space-y-14">
         {/* HEADER + CERTIFICATIONS */}
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
-          <div className="space-y-3">
-            <h1 className="text-3xl md:text-4xl font-semibold">
-              Learning Journey
-            </h1>
-            <p className="text-sm md:text-base text-slate-300 max-w-xl">
-              Tracking my growth in{" "}
-              <span className="text-cyan-300">Java, DSA and Full Stack</span>{" "}
-              with real sessions, tasks and certificates – so it&apos;s clear
-              I&apos;m serious about reaching a product SDE role.
-            </p>
-            <a
-              href="/"
-              className="inline-flex items-center gap-2 rounded-full border border-slate-700 px-4 py-1.5 text-xs hover:border-white hover:bg-white/5 transition"
-            >
+        <div className="flex flex-col gap-10 w-full mb-4 relative">
+          <div className="absolute -top-4 right-0 z-10">
+            <a href="/" className="inline-flex items-center gap-2 rounded-full border border-slate-700 px-4 py-1.5 text-xs hover:border-white hover:bg-white/5 transition">
               ← Back to Home
             </a>
           </div>
 
-          <AchievementsRotator />
+          {/* 1. CERTIFICATES SECTION */}
+          <section className="space-y-4">
+            <h2 className="text-2xl font-semibold text-zinc-100">Certificates</h2>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="max-w-sm rounded-2xl border border-white/10 bg-white/5 p-6 shadow-[0_0_25px_rgba(0,0,0,0.08)] backdrop-blur-lg transition-colors"
+            >
+              <h3 className="mb-4 text-lg font-medium text-slate-200">
+                Java Certificate
+              </h3>
+              <a
+                href="https://drive.google.com/file/d/193_Sfnbo3DJD-IXcWoZdWTsxDvehp2vh/view?usp=drive_link"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex rounded-full bg-gradient-to-r from-zinc-100 via-zinc-300 to-zinc-100 px-6 py-2.5 text-sm font-medium text-black transition hover:opacity-90 shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+              >
+                View Certificate
+              </a>
+            </motion.div>
+          </section>
+
+          {/* 2. LEARNING JOURNEY SECTION */}
+          <section className="space-y-4">
+            <h2 className="text-2xl font-semibold text-zinc-100">Learning Journey</h2>
+            <p className="text-sm md:text-base text-slate-300 max-w-xl pb-2">
+              Tracking my growth in <span className="text-cyan-300">Java, DSA and Full Stack</span> with real sessions, tasks and certificates – so it&apos;s clear I&apos;m serious about reaching a product SDE role.
+            </p>
+            <a
+              href="https://madhusudhanjs.github.io/java-learning-journey/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex rounded-full border border-slate-600/80 bg-transparent px-6 py-2.5 text-sm text-slate-200 backdrop-blur-sm transition hover:border-zinc-300/90 hover:bg-white/5"
+            >
+              Java Core
+            </a>
+          </section>
         </div>
 
         {/* PROGRESS CARDS */}

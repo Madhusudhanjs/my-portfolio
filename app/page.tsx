@@ -1,638 +1,272 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+import Link from "next/link";
+
+const BackgroundEffects = dynamic(() => import("./components/BackgroundEffects"), { ssr: false });
+const Hero3DCharacter = dynamic(() => import("./components/Hero3DCharacter"), { ssr: false });
 
 type Theme = "dark" | "light";
 
+/* ========= AUTO-UPDATING ABOUT ME CONTENT ========= */
+const aboutTexts = [
+  "I enjoy turning complex problems into clean, maintainable solutions. I'm building a strong base with Java and DSA while using React and Next.js to create full stack experiences.",
+  "Currently, I am architecting advanced APIs and scalable backends at Marque Magic, leveraging FastAPI and SQLAlchemy to natively process vital workflows efficiently.",
+  "At Siemens Gamesa, I manage enterprise IT infrastructure and resolve mission-critical hardware vulnerabilities, keeping systems perfectly stable globally upon thousands of nodes.",
+  "I constantly push boundaries. Balancing a full-time IT admin role with rapid software skill-building has trained me to stay strictly disciplined and hungry to improve every single day."
+];
 
-/* ========= FUTURISTIC HERO CARD (ABOUT SECTION RIGHT SIDE) ========= */
+/* ========= TYPEWRITER TEXT ENGINE ========= */
+function TypewriterText({ text }: { text: string }) {
+  const [displayedText, setDisplayedText] = useState("");
 
-function FuturisticHeroCard({ theme }: { theme: Theme }) {
-  const [powered, setPowered] = useState(false);
-  const isDark = theme === "dark";
+  useEffect(() => {
+    setDisplayedText("");
+    let index = 0;
+    const interval = setInterval(() => {
+      setDisplayedText((prev) => prev + text.charAt(index));
+      index++;
+      if (index >= text.length) clearInterval(interval);
+    }, 15); // extremely fast linear type-speed
+
+    return () => clearInterval(interval);
+  }, [text]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.4 }}
-      transition={{ duration: 0.6, delay: 0.1 }}
-      className={`relative rounded-3xl p-5 overflow-hidden backdrop-blur-xl shadow-[0_0_40px_rgba(0,0,0,0.12)] transition-colors duration-500 ${
-        isDark
-          ? "border border-white/12 bg-white/5"
-          : "border border-slate-200 bg-white/90"
-      }`}
-    >
-      {/* subtle grid background */}
-      <div className="pointer-events-none absolute inset-0 opacity-5 [background-image:linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] [background-size:40px_40px]" />
-
-      <div className="relative flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <h3
-            className={`text-sm font-semibold ${
-              isDark ? "text-zinc-50" : "text-slate-900"
-            }`}
-          >
-            Core Skills &amp; Power-Ups
-          </h3>
-         {/* <span
-            className={`text-[10px] px-2 py-1 rounded-full border bg-black/5 ${
-              isDark
-                ? "border-slate-600 bg-black/40 text-slate-300"
-                : "border-slate-300 text-slate-600"
-            }`}
-          >
-            Click the hero
-          </span>*/}
-        </div>
-
-        {/* HERO + ENERGY HAND */}
-        <button
-          type="button"
-          onClick={() => setPowered((p) => !p)}
-          className="relative flex items-center gap-4 py-3 outline-none"
-        >
-          {/* Hero silhouette */}
-          <motion.div
-            animate={
-              powered
-                ? { scale: 1.05, rotate: [-2, 2, -1, 1, 0] }
-                : { scale: 1, rotate: 0 }
-            }
-            transition={{ duration: 0.4 }}
-            className={`relative w-20 h-24 rounded-2xl flex items-center justify-center ${
-              isDark
-                ? "bg-gradient-to-b from-zinc-200 to-zinc-500 shadow-[0_0_30px_rgba(250,250,250,0.25)]"
-                : "bg-gradient-to-b from-slate-100 to-slate-300 shadow-[0_0_30px_rgba(148,163,184,0.45)]"
-            }`}
-          >
-            {/* helmet & visor */}
-            <div className="w-10 h-4 rounded-full bg-black/80 mt-[-14px]" />
-            <div className="absolute top-5 w-10 h-2 rounded-full bg-cyan-300/80 shadow-[0_0_16px_rgba(34,211,238,0.9)]" />
-            {/* torso */}
-            <div className="absolute top-8 w-8 h-10 rounded-b-[18px] bg-zinc-900/90" />
-
-            {/* glowing hand */}
-            <motion.div
-              animate={
-                powered
-                  ? { scale: [1, 1.15, 1], opacity: 1 }
-                  : { scale: 0.9, opacity: 0.75 }
-              }
-              transition={{
-                duration: 0.5,
-                repeat: powered ? Infinity : 0,
-                repeatDelay: 0.8,
-              }}
-              className="absolute -right-4 bottom-6 w-9 h-9 rounded-full border border-cyan-300/80 bg-cyan-400/30 shadow-[0_0_24px_rgba(34,211,238,0.9)]"
-            >
-              <div className="absolute inset-2 rounded-full border border-white/70" />
-            </motion.div>
-          </motion.div>
-
-          {/* Hero text */}
-          <div
-            className={`flex-1 text-left space-y-1 text-xs ${
-              isDark ? "text-slate-200" : "text-slate-700"
-            }`}
-          >
-            <p className="font-medium">
-              {powered
-                ? "Skill systems online — viewing full-stack capabilities."
-                : "Tap the suit to power up skills view."}
-            </p>
-            <p className="text-[11px] text-slate-400">
-              This is my developer mode: combining Java, DSA and modern web to
-              build useful products.
-            </p>
-          </div>
-        </button>
-
-        {/* ENERGY SKILLS CARD */}
-        <motion.div
-          animate={powered ? { opacity: 1, y: 0 } : { opacity: 0.35, y: 6 }}
-          transition={{ duration: 0.35 }}
-          className={`rounded-2xl px-4 py-3 text-xs space-y-2 shadow-[0_0_30px_rgba(34,211,238,0.2)] transition-colors duration-500 ${
-            isDark
-              ? "border border-cyan-400/40 bg-black/60 text-slate-100"
-              : "border border-cyan-300/60 bg-cyan-50 text-slate-900"
-          }`}
-        >
-          <p className="text-[11px] uppercase tracking-wide text-cyan-500">
-            Active Tech Stack
-          </p>
-          <ul className="space-y-1 text-[11px]">
-            <li>• Java (OOP, core, backend basics)</li>
-            <li>• Data Structures &amp; Algorithms</li>
-            <li>• React &amp; Next.js for full-stack apps</li>
-            <li>• Git &amp; GitHub for clean workflow</li>
-            <li>• MySQL fundamentals &amp; basic DB design</li>
-          </ul>
-        </motion.div>
-      </div>
-    </motion.div>
+    <p className="text-sm md:text-base leading-relaxed text-slate-400 w-full text-left">
+      {displayedText}
+      <motion.span 
+         animate={{ opacity: [1, 0] }} 
+         transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
+         className="inline-block w-[6px] h-[13px] md:h-[15px] bg-emerald-400 ml-1 translate-y-[2px]"
+      />
+    </p>
   );
 }
 
 /* =========================== HOME PAGE ============================ */
-
 export default function Home() {
-  const [showHi, setShowHi] = useState(false);
-  const [mode, setMode] = useState<"robot" | "human">("robot");
   const [theme, setTheme] = useState<Theme>("dark");
+  const [mode, setMode] = useState<"robot" | "human">("robot");
+  const [textIndex, setTextIndex] = useState(0);
 
   const isDark = theme === "dark";
 
-  const handlePhotoClick = () => {
-    setMode((prev) => (prev === "robot" ? "human" : "robot"));
-    setShowHi((prev) => !prev);
-  };
+  const handlePhotoClick = () => setMode((prev) => (prev === "robot" ? "human" : "robot"));
+  const toggleTheme = () => setTheme((prev) => (prev === "dark" ? "light" : "dark"));
 
-  const toggleTheme = () =>
-    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTextIndex((prev) => (prev + 1) % aboutTexts.length);
+    }, 30000); // Trigger index rotation precisely every 30 seconds globally
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <main
-      className={`min-h-screen px-4 py-12 flex flex-col transition-colors duration-500 ${
-        isDark
-          ? "bg-gradient-to-br from-[#02010A] via-[#050816] to-black text-slate-100"
-          : "bg-gradient-to-br from-[#f9fafb] via-[#f3f4f6] to-[#e5e7eb] text-slate-900"
-      }`}
-    >
-      <div className="w-full max-w-6xl mx-auto space-y-16 flex-1">
-        {/* TOP BAR: THEME TOGGLE */}
+    <main className={`min-h-screen px-4 py-12 flex flex-col transition-colors duration-500 relative ${isDark ? "bg-transparent text-slate-100" : "bg-gradient-to-br from-[#f9fafb] via-[#f3f4f6] to-[#e5e7eb] text-slate-900"}`}>
+      {isDark && <BackgroundEffects />}
+
+      <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: "easeOut" }} className="w-full max-w-6xl mx-auto space-y-4 flex-1 relative z-10">
         <div className="flex justify-end mb-4">
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className={`inline-flex items-center gap-2 text-[11px] px-3 py-1.5 rounded-full border backdrop-blur-sm transition ${
-              isDark
-                ? "border-slate-700 bg-black/40 text-slate-200 hover:bg-black/60"
-                : "border-slate-300 bg-white/80 text-slate-700 hover:bg-white"
-            }`}
-          >
+          <button type="button" onClick={toggleTheme} className={`inline-flex items-center gap-2 text-[11px] px-3 py-1.5 rounded-full border backdrop-blur-sm transition ${isDark ? "border-slate-700 bg-black/40 text-slate-200 hover:bg-black/60" : "border-slate-300 bg-white/80 text-slate-700 hover:bg-white"}`}>
             <span>{isDark ? "🌞" : "🌙"}</span>
             <span>{isDark ? "Light mode" : "Dark mode"}</span>
           </button>
         </div>
 
         {/* HERO SECTION */}
-        <section className="grid md:grid-cols-[2fr,1.4fr] gap-10 items-center">
-          {/* LEFT - TEXT */}
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="space-y-6"
-          >
-            <p className="text-[11px] tracking-[0.35em] uppercase text-slate-500">
-              Full Stack Developer · Java · JavaScript
-            </p>
-
-            <h1
-              className={`text-4xl md:text-5xl font-semibold leading-tight ${
-                isDark ? "text-slate-50" : "text-slate-900"
-              }`}
-            >
-              <span className="block">Madhusudhan J&nbsp;S</span>
-              <span className="mt-3 block text-sm md:text-base font-normal text-slate-400">
-                B.Tech CSE · Full Stack Developer in progress · Building real-world products
-              </span>
-            </h1>
-
-            <p className="text-sm md:text-base text-slate-500 md:text-slate-400 leading-relaxed">
-             I’m a Computer Science graduate focused on Java, DSA and modern full-stack development. 
-             I enjoy building real, meaningful applications and improving a little every day through discipline,
-              consistency and hands-on projects.
-            </p>
-
-            <div className="flex flex-wrap gap-4 pt-2">
-              <motion.a
-                href="/projects"
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                className={`rounded-full px-6 py-2.5 text-sm font-medium shadow-[0_0_30px_rgba(148,163,184,0.35)] transition ${
-                  isDark
-                    ? "bg-gradient-to-r from-zinc-100 via-zinc-300 to-zinc-100 text-black"
-                    : "bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-slate-50"
-                }`}
-              >
-                View Projects
-              </motion.a>
-
-            <motion.a
-                href="/learning"
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                className={`rounded-full px-6 py-2.5 text-sm border backdrop-blur-sm transition ${
-                  isDark
-                    ? "border-slate-600/80 hover:border-zinc-300/90 hover:bg-white/5"
-                    : "border-slate-300 hover:border-slate-500 bg-white/60 hover:bg-white"
-                }`}
-              >
-                Learning Journey
-              </motion.a>
-            </div>
-
-            <div className="flex flex-wrap gap-3 pt-4 text-xs text-slate-400">
-              <span
-                className={`px-3 py-1 rounded-full border backdrop-blur ${
-                  isDark
-                    ? "border-slate-700/80 bg-black/40"
-                    : "border-slate-300 bg-white/70"
-                }`}
-              >
-                🔁 Consistent daily improvement
-              </span>
-              <span
-                className={`px-3 py-1 rounded-full border backdrop-blur ${
-                  isDark
-                    ? "border-slate-700/80 bg-black/40"
-                    : "border-slate-300 bg-white/70"
-                }`}
-              >
-                🧠 Problem-solving &amp; DSA focused
-              </span>
-            </div>
-          </motion.div>
-
-          {/* RIGHT - PHOTO CARD WITH ROBOT → YOU + HI CLOUD */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9 }}
-            className="relative flex justify-center"
-          >
-            {/* Glow behind */}
-            <div
-              className={`absolute -inset-6 blur-2xl opacity-70 ${
-                isDark
-                  ? "bg-[radial-gradient(circle_at_top,_rgba(250,250,250,0.18),_transparent_60%)]"
-                  : "bg-[radial-gradient(circle_at_top,_rgba(30,64,175,0.20),_transparent_60%)]"
-              }`}
-            />
-
-            {/* Speech bubble / cloud */}
-            <AnimatePresence>
-              {showHi && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                  animate={{ opacity: 1, y: -10, scale: 1 }}
-                  exit={{ opacity: 0, y: 20, scale: 0.9 }}
-                  transition={{ duration: 0.3 }}
-                  className="absolute -top-6 left-1/2 -translate-x-1/2 z-20"
-                >
-                  <div className="relative max-w-xs rounded-2xl bg-white/95 text-slate-900 px-4 py-3 shadow-xl">
-                    <p className="text-xs font-semibold">👋 Hi, I&apos;m Madhu</p>
-                    <p className="text-[11px] mt-1">
-                      Full Stack Developer in progress — I build, break and
-                      learn something new every day.
-                    </p>
-                    <div className="absolute left-1/2 -bottom-2 h-3 w-3 -translate-x-1/2 rotate-45 bg-white/95" />
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Glass card with clickable avatar */}
-            <button
-              type="button"
-              onClick={handlePhotoClick}
-              className={`relative rounded-3xl border p-5 w-full max-w-xs space-y-4 outline-none focus:ring-2 focus:ring-zinc-300/60 shadow-[0_0_45px_rgba(0,0,0,0.2)] backdrop-blur-xl transition-colors duration-500 ${
-                isDark
-                  ? "border-white/10 bg-white/5"
-                  : "border-slate-200 bg-white/90"
-              }`}
-            >
-              <div className="flex flex-col items-center gap-4">
-                {/* Avatar: robot ↔ human */}
-                <AnimatePresence mode="wait">
-                  {mode === "robot" ? (
-                    <motion.div
-                      key="robot"
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{
-                        opacity: 1,
-                        scale: 1,
-                        rotate: [0, -4, 4, -3, 3, 0],
-                      }}
-                      exit={{ opacity: 0, scale: 0.8 }}
-                      transition={{ duration: 0.35 }}
-                      className="relative rounded-full border border-white/60 w-32 h-32 bg-black flex items-center justify-center text-5xl"
-                    >
-                      <span>🤖</span>
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="human"
-                      initial={{ opacity: 0, scale: 0.85, y: 10 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.85, y: 10 }}
-                      transition={{ duration: 0.35 }}
-                      className="relative rounded-full overflow-hidden border border-white/60 w-32 h-32 bg-black"
-                    >
-                      <Image
-                        src="/profile.jpg"
-                        alt="Profile photo"
-                        width={128}
-                        height={128}
-                        className="object-cover"
-                      />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                <div className="text-center space-y-1">
-                  <p
-                    className={`text-sm font-medium ${
-                      isDark ? "text-zinc-50" : "text-slate-900"
-                    }`}
-                  >
-                    Full Stack Developer in Progress
-                  </p>
-                  <p className="text-[11px] text-slate-400">
-                    Tap the card — robot turns into me 👇
-                  </p>
-                </div>
-              </div>
-
-              <div className="h-px bg-gradient-to-r from-transparent via-white/30 to-transparent my-2" />
-
-              <div className="grid grid-cols-2 gap-3 text-[11px] text-slate-500">
-                <div className="space-y-1">
-                  <p className="text-[10px] uppercase tracking-wide text-slate-400">
-                    Current Focus
-                  </p>
-                  <p>Core Java, DSA, real projects</p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-[10px] uppercase tracking-wide text-slate-400">
-                    Direction
-                  </p>
-                  <p>Product-based full stack roles</p>
-                </div>
-              </div>
-            </button>
-          </motion.div>
-        </section>
-
-        {/* CONNECT – JUST BELOW HERO */}
-        <motion.section
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className={`space-y-4 border-t pt-6 ${
-            isDark ? "border-slate-800" : "border-slate-200"
-          }`}
-        >
-          <h2
-            className={`text-sm font-semibold ${
-              isDark ? "text-slate-200" : "text-slate-900"
-            }`}
-          >
-            Connect with me
-          </h2>
-
-          {/* main links */}
-          <div className="flex flex-wrap gap-3 text-xs">
-            <a
-              href="https://github.com/Madhusudhanjs"
-              target="_blank"
-              rel="noreferrer"
-              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border transition ${
-                isDark
-                  ? "border-slate-700 text-slate-200 hover:border-zinc-200 hover:bg-white/5"
-                  : "border-slate-300 text-slate-700 hover:border-slate-500 hover:bg-white"
-              }`}
-            >
-              <span>🐙</span>
-              <span>GitHub</span>
-            </a>
-
-            <a
-              href="https://www.linkedin.com/in/madhusudhan-j-s/"
-              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border transition ${
-                isDark
-                  ? "border-slate-700 text-slate-200 hover:border-zinc-200 hover:bg-white/5"
-                  : "border-slate-300 text-slate-700 hover:border-slate-500 hover:bg-white"
-              }`}
-            >
-              <span>💼</span>
-              <span>LinkedIn</span>
-            </a>
-
-            <a
-              href="https://www.naukri.com/mnjuser/homepage?"
-              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border transition ${
-                isDark
-                  ? "border-slate-700 text-slate-200 hover:border-zinc-200 hover:bg-white/5"
-                  : "border-slate-300 text-slate-700 hover:border-slate-500 hover:bg-white"
-              }`}
-            >
-              <span>📄</span>
-              <span>Naukri</span>
-            </a>
-            <a
-                  href="/resume"
-                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border transition ${
-                    isDark
-                      ? "border-slate-700 text-slate-200 hover:border-zinc-200 hover:bg-white/5"
-                      : "border-slate-300 text-slate-700 hover:border-slate-500 hover:bg-white"
-                  }`}
-                >
-                  <span>📄</span>
-                  <span>Resume</span>
-                </a>
-          </div>
-                
-
-          {/* email + phone */}
-            <div className="flex flex-wrap gap-4 text-[11px] text-slate-500">
-              <a
-                href="mailto:jsmadhusudhan@gmail.com"
-                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border transition ${
-                  isDark
-                    ? "bg-white/5 border-slate-700 hover:bg-white/10"
-                    : "bg-white border-slate-300 hover:border-slate-500 hover:bg-slate-50"
-                }`}
-              >
-                <span>📧</span>
-                <span>jsmadhusudhan@gmail.com</span>
+        <section className="flex flex-col gap-8">
+          
+          {/* TOP ROW: Title on Left, Avatar strictly on Top Right */}
+          <div className="flex flex-col-reverse md:flex-row justify-between items-center md:items-start gap-8">
+            <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} className="space-y-4 flex-1 w-full text-center md:text-left">
+              
+              <a href="/work-journey" className={`inline-flex items-center gap-3 px-4 py-2 rounded-full border transition backdrop-blur-md cursor-pointer text-xs md:text-sm shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:-translate-y-0.5 ${isDark ? "border-white/10 bg-white/5 hover:bg-white/10" : "border-slate-300 bg-white/60 hover:bg-white"}`}>
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="font-medium text-emerald-400">Current Impact: Siemens Gamesa</span>
+                <span className="opacity-50 hidden sm:inline">|</span>
+                <span className="font-semibold text-zinc-100 hidden sm:inline">View Working ➔</span>
               </a>
 
-              <a
-                href="tel:+919606751386"
-                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border transition ${
-                  isDark
-                    ? "bg-white/5 border-slate-700 hover:bg-white/10"
-                    : "bg-white border-slate-300 hover:border-slate-500 hover:bg-slate-50"
-                }`}
-              >
-                <span>📱</span>
-                <span>+91-9606751386</span>
-              </a>
-            </div>
+              <h1 className={`text-4xl md:text-6xl font-bold leading-tight tracking-tight ${isDark ? "text-slate-50" : "text-slate-900"}`}>
+                <span className="block">Madhusudhan J S</span>
+                <span className="mt-4 block text-lg md:text-xl font-normal text-slate-400 tracking-normal">B.Tech CSE · Full Stack Developer in progress</span>
+              </h1>
 
-        </motion.section>
-
-        {/* ABOUT + CAR + FUTURISTIC HERO */}
-        <section
-          id="about"
-          className="grid md:grid-cols-[1.6fr,1.4fr] gap-10 items-stretch"
-        >
-          {/* LEFT: ABOUT + CAR ANIMATION */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.6 }}
-            className="space-y-5"
-          >
-            <h2
-              className={`text-lg font-semibold ${
-                isDark ? "text-zinc-100" : "text-slate-900"
-              }`}
-            >
-              About Me
-            </h2>
-
-            <p className="text-sm md:text-base leading-relaxed text-slate-500 md:text-slate-400">
-              I enjoy turning complex problems into clean, maintainable
-              solutions. I&apos;m building a strong base with Java and DSA while
-              using React and Next.js to create full stack experiences.
-              Balancing a full-time job with skill-building has trained me to
-              stay focused, disciplined and hungry to improve every single day.
-            </p>
-
-            {/* “Car” lane */}
-            <div
-              className={`mt-4 relative h-32 rounded-3xl overflow-hidden border bg-gradient-to-r ${
-                isDark
-                  ? "border-white/10 from-black via-slate-900 to-black"
-                  : "border-slate-200 from-slate-900 via-slate-800 to-slate-900"
-              }`}
-            >
-              {/* Road line */}
-              <div className="absolute inset-x-6 bottom-6 h-[2px] bg-gradient-to-r from-transparent via-slate-500/70 to-transparent" />
-
-              {/* Car – sleek black silhouette with lights */}
-              <motion.div
-                initial={{ x: -180, opacity: 0 }}
-                whileInView={{ x: 0, opacity: 1 }}
-                viewport={{ once: true, amount: 0.6 }}
-                transition={{ duration: 1, ease: "easeOut" }}
-                className="absolute left-8 bottom-4 flex items-end gap-3"
-              >
-                {/* Body of car */}
-                <div className="relative w-40 h-16 rounded-3xl bg-gradient-to-br from-zinc-900 via-black to-zinc-800 shadow-[0_0_40px_rgba(255,255,255,0.15)]">
-                  {/* Cabin */}
-                  <div className="absolute left-7 -top-5 w-20 h-7 rounded-2xl bg-gradient-to-br from-slate-300/70 to-slate-500/40" />
-                  {/* Headlights */}
-                  <div className="absolute -right-1 top-6 w-4 h-2 rounded-r-full bg-amber-300 shadow-[0_0_18px_rgba(253,224,71,0.8)]" />
-                  {/* Wheels */}
-                  <div className="absolute left-5 -bottom-3 w-6 h-6 rounded-full bg-black border border-zinc-500" />
-                  <div className="absolute right-5 -bottom-3 w-6 h-6 rounded-full bg-black border border-zinc-500" />
-                </div>
-
-                <p className="text-[11px] text-slate-200">
-                  Driving steadily towards{" "}
-                  <span className="font-semibold text-zinc-50">
-                    product-based full stack roles
+              {/* AUTO-UPDATING ABOUT ME (ALIGNED LEFT TO IMAGE) */}
+              <div className="relative min-h-[140px] md:min-h-[110px] w-full bg-white/5 border border-white/5 rounded-2xl p-6 backdrop-blur-sm mt-6 text-left">
+                <div className="flex items-center justify-between mb-3 border-b border-white/10 pb-3">
+                  <span className="text-[10px] md:text-xs text-emerald-400 uppercase tracking-widest font-bold flex items-center gap-2">
+                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-[pulse_2s_ease-in-out_Infinity]" /> LIVE ABOUT ME FEED ({textIndex + 1}/{aboutTexts.length})
                   </span>
-                  .
-                </p>
-              </motion.div>
-            </div>
-          </motion.div>
-
-          {/* RIGHT: FUTURISTIC HERO + SKILLS CARD */}
-          <FuturisticHeroCard theme={theme} />
-        </section>
-
-        {/* HOBBIES & INTERESTS */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className={`mt-2 rounded-2xl border p-4 shadow-[0_0_25px_rgba(0,0,0,0.08)] backdrop-blur-lg transition-colors duration-500 ${
-            isDark
-              ? "border-white/10 bg-white/5"
-              : "border-slate-200 bg-white/90"
-          }`}
-        >
-          <h3
-            className={`text-sm font-semibold mb-3 ${
-              isDark ? "text-zinc-100" : "text-slate-900"
-            }`}
-          >
-            Hobbies &amp; Interests
-          </h3>
-
-          <div className="grid grid-cols-2 gap-3 text-xs text-slate-500">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className={`rounded-xl p-3 transition border ${
-                isDark
-                  ? "border-slate-700 bg-black/40 hover:border-white/30"
-                  : "border-slate-200 bg-slate-50 hover:border-slate-400"
-              }`}
-            >
-              🚀 Exploring new tech &amp; tools
+                </div>
+                <TypewriterText text={aboutTexts[textIndex]} />
+              </div>
             </motion.div>
 
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className={`rounded-xl p-3 transition border ${
-                isDark
-                  ? "border-slate-700 bg-black/40 hover:border-white/30"
-                  : "border-slate-200 bg-slate-50 hover:border-slate-400"
-              }`}
-            >
-              🧩 Solving coding &amp; logic problems
-            </motion.div>
+            {/* AVATAR FLIP CARD (TOP RIGHT) */}
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }} className="shrink-0 w-full max-w-xs md:max-w-none md:w-auto flex justify-center">
+              <button type="button" onClick={handlePhotoClick} className={`relative rounded-3xl border p-4 md:p-5 w-fit outline-none focus:ring-2 focus:ring-zinc-300/60 shadow-[0_0_45px_rgba(0,0,0,0.2)] backdrop-blur-xl transition-colors duration-500 ${isDark ? "border-white/10 bg-white/5" : "border-slate-200 bg-white/90"}`}>
+                <div className="flex flex-row items-center justify-start gap-4">
+                  
+                  {/* Seamless 3D Flip Card */}
+                  <div className="relative w-28 h-28 md:w-36 md:h-36 shrink-0" style={{ perspective: "1000px" }}>
+                    <motion.div animate={{ rotateY: mode === "robot" ? 0 : 180 }} transition={{ duration: 0.6, type: "spring", stiffness: 100, damping: 20 }} className="w-full h-full relative" style={{ transformStyle: "preserve-3d" }}>
+                      <div className="absolute inset-0 w-full h-full rounded-full border border-white/20 bg-zinc-950/80 shadow-[0_0_40px_rgba(255,255,255,0.03)] overflow-hidden pointer-events-none" style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}>
+                        <Hero3DCharacter />
+                      </div>
+                      <div className="absolute inset-0 w-full h-full rounded-full border border-white/20 bg-black shadow-[0_0_40px_rgba(255,255,255,0.05)] overflow-hidden pointer-events-none" style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
+                        <Image src="/profile.jpg" alt="Profile photo" width={144} height={144} className="object-cover w-full h-full" />
+                      </div>
+                    </motion.div>
+                  </div>
 
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className={`rounded-xl p-3 transition border ${
-                isDark
-                  ? "border-slate-700 bg-black/40 hover:border-white/30"
-                  : "border-slate-200 bg-slate-50 hover:border-slate-400"
-              }`}
-            >
-              🎥 Watching tech &amp; startup content
-            </motion.div>
-
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className={`rounded-xl p-3 transition border ${
-                isDark
-                  ? "border-slate-700 bg-black/40 hover:border-white/30"
-                  : "border-slate-200 bg-slate-50 hover:border-slate-400"
-              }`}
-            >
-              🏋️ Fitness, discipline &amp; self-growth
+                  {/* Side Text */}
+                  <div className="flex flex-col text-left space-y-2 overflow-hidden">
+                    <p className={`text-sm md:text-base font-bold ${isDark ? "text-zinc-50" : "text-slate-900"}`}>Full Stack Dev</p>
+                    <div className="flex items-center gap-1.5">
+                      <motion.span animate={{ x: [0, -4, 0] }} transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }} className="text-lg leading-none">👈</motion.span>
+                      <motion.div style={{ display: "inline-block", whiteSpace: "nowrap" }} initial={{ clipPath: "inset(0% 100% 0% 0%)" }} animate={{ clipPath: "inset(0% 0% 0% 0%)" }} transition={{ duration: 1.5, ease: "linear", repeat: Infinity, repeatType: "reverse", repeatDelay: 2 }}>
+                        <span className="text-[12px] md:text-sm font-medium text-slate-400 border-r-[1.5px] border-white/50 pr-1 inline-block tracking-wide">Tap to flip me</span>
+                      </motion.div>
+                    </div>
+                  </div>
+                </div>
+              </button>
             </motion.div>
           </div>
-        </motion.div>
-      </div>
 
-      {/* Footer */}
-      <footer
-        className={`text-xs mt-10 border-t ${
-          isDark
-            ? "border-slate-800 text-slate-500"
-            : "border-slate-200 text-slate-500"
-        }`}
-      >
-        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+          {/* BOTTOM ROW: Connect & Quick Links */}
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }} className="space-y-6 max-w-4xl">
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
+              <a href="https://github.com/Madhusudhanjs" target="_blank" rel="noreferrer" className={`inline-flex items-center gap-2 px-4 py-2 text-sm rounded-full border transition hover:-translate-y-1 ${isDark ? "border-slate-700 text-slate-200 hover:border-zinc-200 bg-white/5" : "border-slate-300 text-slate-700 hover:border-slate-500 bg-white"}`}><span>🐙</span> GitHub</a>
+              <a href="https://www.linkedin.com/in/madhusudhan-j-s/" target="_blank" rel="noreferrer" className={`inline-flex items-center gap-2 px-4 py-2 text-sm rounded-full border transition hover:-translate-y-1 ${isDark ? "border-slate-700 text-slate-200 hover:border-zinc-200 bg-white/5" : "border-slate-300 text-slate-700 hover:border-slate-500 bg-white"}`}><span>💼</span> LinkedIn</a>
+              <a href="mailto:jsmadhusudhan@gmail.com" className={`inline-flex items-center gap-2 px-4 py-2 text-sm rounded-full border transition hover:-translate-y-1 ${isDark ? "border-slate-700 text-slate-200 hover:border-zinc-200 bg-white/5" : "border-slate-300 text-slate-700 hover:border-slate-500 bg-white"}`}><span>📧</span> jsmadhusudhan@gmail.com</a>
+              <a href="tel:+919606751386" className={`inline-flex items-center gap-2 px-4 py-2 text-sm rounded-full border transition hover:-translate-y-1 ${isDark ? "border-slate-700 text-slate-200 hover:border-zinc-200 bg-white/5" : "border-slate-300 text-slate-700 hover:border-slate-500 bg-white"}`}><span>📱</span> 9606751386</a>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-6 border-t border-slate-500/20">
+              <motion.a href="/work-journey" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className={`rounded-full px-8 py-3 text-sm font-semibold shadow-[0_0_30px_rgba(255,255,255,0.15)] transition ${isDark ? "bg-white text-black hover:bg-zinc-200" : "bg-slate-900 text-slate-50 hover:bg-slate-800"}`}>Work Journey</motion.a>
+              <motion.a href="/resume" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className={`flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium border backdrop-blur-sm transition ${isDark ? "border-slate-600 hover:border-white bg-white/5" : "border-slate-300 hover:border-slate-500 bg-white/60 hover:bg-white"}`}><span>📄</span> Resume</motion.a>
+              <motion.a href="/projects" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className={`rounded-full px-6 py-3 text-sm font-medium border backdrop-blur-sm transition ${isDark ? "border-slate-600 hover:border-white bg-white/5" : "border-slate-300 hover:border-slate-500 bg-white/60 hover:bg-white"}`}>View Projects</motion.a>
+              <motion.a href="/learning" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className={`flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium border backdrop-blur-sm transition ${isDark ? "border-slate-600 hover:border-white bg-white/5" : "border-slate-300 hover:border-slate-500 bg-white/60 hover:bg-white"}`}><span>📚</span> Learning Path</motion.a>
+            </div>
+          </motion.div>
+        </section>
+
+
+
+        {/* BOTTOM REALISTIC SKILLS GRID */}
+        <section className="pt-24 mt-4 border-t border-white/5">
+          <div className="grid md:grid-cols-3 gap-6">
+            <motion.div whileHover={{ y: -5 }} className={`relative overflow-hidden rounded-3xl p-8 border shadow-lg transition-all ${isDark ? "border-white/10 bg-zinc-900/40 backdrop-blur-md" : "border-slate-200 bg-white/80"}`}>
+              <div className="absolute top-0 right-0 p-4 opacity-10 text-6xl">🧠</div>
+              <h3 className="text-sm font-bold mb-6 uppercase tracking-widest text-emerald-500">Core Concepts</h3>
+              <ul className="space-y-4 text-sm font-medium text-slate-400">
+                <li className="flex items-center gap-3"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500/50" /> Object-Oriented Programming</li>
+                <li className="flex items-center gap-3"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500/50" /> Data Structures & Algorithms</li>
+                <li className="flex items-center gap-3"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500/50" /> RESTful API Design</li>
+                <li className="flex items-center gap-3"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500/50" /> Relational DB Modeling</li>
+              </ul>
+            </motion.div>
+
+            <motion.div whileHover={{ y: -5 }} className={`relative overflow-hidden rounded-3xl p-8 border shadow-lg transition-all ${isDark ? "border-white/10 bg-zinc-900/40 backdrop-blur-md" : "border-slate-200 bg-white/80"}`}>
+              <div className="absolute top-0 right-0 p-4 opacity-10 text-6xl">⚡</div>
+              <h3 className="text-sm font-bold mb-6 uppercase tracking-widest text-cyan-500">Technical Skills</h3>
+              <ul className="space-y-4 text-sm font-medium text-slate-400">
+                <li className="flex items-center gap-3"><span className="w-1.5 h-1.5 rounded-full bg-cyan-500/50" /> Java / Python / JavaScript</li>
+                <li className="flex items-center gap-3"><span className="w-1.5 h-1.5 rounded-full bg-cyan-500/50" /> React & Next.js Ecosystem</li>
+                <li className="flex items-center gap-3"><span className="w-1.5 h-1.5 rounded-full bg-cyan-500/50" /> FastAPI / Flask Backends</li>
+                <li className="flex items-center gap-3"><span className="w-1.5 h-1.5 rounded-full bg-cyan-500/50" /> PostgreSQL & SQLAlchemy</li>
+              </ul>
+            </motion.div>
+
+            <motion.div whileHover={{ y: -5 }} className={`relative overflow-hidden rounded-3xl p-8 border shadow-lg transition-all ${isDark ? "border-white/10 bg-zinc-900/40 backdrop-blur-md" : "border-slate-200 bg-white/80"}`}>
+              <div className="absolute top-0 right-0 p-4 opacity-10 text-6xl">🎯</div>
+              <h3 className="text-sm font-bold mb-6 uppercase tracking-widest text-purple-400">Hobbies & Honesties</h3>
+              <ul className="space-y-4 text-sm font-medium text-slate-400">
+                <li className="flex items-center gap-3"><span className="w-1.5 h-1.5 rounded-full bg-purple-500/50" /> Consistent Daily Coding</li>
+                <li className="flex items-center gap-3"><span className="w-1.5 h-1.5 rounded-full bg-purple-500/50" /> Complex Problem Solving</li>
+                <li className="flex items-center gap-3"><span className="w-1.5 h-1.5 rounded-full bg-purple-500/50" /> Fitness & Discipline</li>
+                <li className="flex items-center gap-3"><span className="w-1.5 h-1.5 rounded-full bg-purple-500/50" /> Startup & Tech Media</li>
+              </ul>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* FINAL CTA: MY DIGITAL LIFE */}
+        <div className="w-full pt-20 pb-12">
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-500/10 to-transparent mb-20" />
+          
+          <motion.section 
+            initial={{ opacity: 0, scale: 0.98 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="relative"
+          >
+            {/* Background Glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
+            
+            <motion.div 
+              whileHover={{ y: -8, scale: 1.01 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              className={`max-w-3xl mx-auto rounded-[2.5rem] p-10 md:p-16 border shadow-2xl relative overflow-hidden flex flex-col items-center text-center gap-8 ${isDark ? "border-white/5 bg-zinc-900/30 backdrop-blur-xl" : "border-slate-200 bg-white"}`}
+            >
+              <div className="space-y-4">
+                <span className="text-[10px] text-blue-500 uppercase tracking-[0.4em] font-black block opacity-80">
+                  The Journey
+                </span>
+                
+                <h2 className="text-3xl md:text-5xl font-black tracking-tighter uppercase italic leading-none">
+                   My <span className="text-blue-500">Digital</span> World
+                </h2>
+                
+                <div className="space-y-3 max-w-xl mx-auto">
+                  <p className="text-slate-400 font-medium text-sm md:text-base leading-relaxed">
+                    "From serving 3000+ customers to building scalable systems. My journey is defined by human interaction and code."
+                  </p>
+                  <p className="text-slate-500 text-[11px] md:text-xs font-semibold uppercase tracking-wider">
+                    Communication · Problem Solving · Engineering
+                  </p>
+                </div>
+              </div>
+
+              <Link 
+                href="/my-digital-life" 
+                className={`group relative flex items-center gap-4 px-8 py-4 rounded-full font-black uppercase tracking-[0.2em] text-[10px] md:text-xs transition-all shadow-xl hover:shadow-blue-500/20 ${isDark ? "bg-white text-black hover:bg-blue-600 hover:text-white" : "bg-black text-white hover:bg-blue-600"}`}
+              >
+                 <span className="relative z-10 flex items-center gap-2">
+                   Enter My Digital World
+                   <span className="group-hover:translate-x-1.5 transition-transform duration-300">➔</span>
+                 </span>
+                 <div className="absolute inset-0 rounded-full bg-blue-500 opacity-0 group-hover:opacity-100 blur-lg transition-opacity duration-500 -z-10" />
+              </Link>
+
+              {/* Parallax elements */}
+              <motion.div 
+                animate={{ y: [0, -15, 0], opacity: [0.05, 0.1, 0.05] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -top-10 -right-10 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"
+              />
+              <motion.div 
+                animate={{ y: [0, 15, 0], opacity: [0.05, 0.08, 0.05] }}
+                transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -bottom-10 -left-10 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"
+              />
+            </motion.div>
+          </motion.section>
+        </div>
+
+      </motion.div>
+
+      <footer className={`text-xs mt-10 border-t z-10 relative pb-10 ${isDark ? "border-slate-800 text-slate-500" : "border-slate-200 text-slate-500"}`}>
+        <div className="max-w-6xl mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <span>© {new Date().getFullYear()} Madhusudhan J S</span>
-          <span className="tracking-[0.35em] uppercase text-slate-400">
-            MAAI
-          </span>
+          <span className="tracking-[0.35em] uppercase text-slate-400">MAAI</span>
         </div>
       </footer>
     </main>
