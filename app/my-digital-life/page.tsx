@@ -43,7 +43,7 @@ export default function MyDigitalLifePage() {
   const [mode, setMode] = useState<SceneMode>("sales");
 
   return (
-    <main className="h-screen w-full relative bg-zinc-950 overflow-hidden text-white font-inter">
+    <main className="h-screen w-full relative bg-zinc-950 overflow-hidden text-white font-sans">
       
       {/* 3D CANVAS BACKGROUND */}
       <div className="absolute inset-0 z-0">
