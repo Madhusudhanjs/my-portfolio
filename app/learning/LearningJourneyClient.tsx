@@ -2,7 +2,7 @@
 
 import { useEffect, useState, ChangeEvent } from "react";
 import { motion } from "framer-motion";
-import { Award, GraduationCap, Sparkles } from "lucide-react";
+import { GraduationCap } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 

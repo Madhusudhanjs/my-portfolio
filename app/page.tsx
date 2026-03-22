@@ -25,7 +25,7 @@ function TypewriterText({ text }: { text: string }) {
 
   useEffect(() => {
     let index = 0;
-    let timeoutId: any;
+    let timeoutId: string | number | NodeJS.Timeout | undefined;
 
     const type = () => {
       if (index < text.length) {
